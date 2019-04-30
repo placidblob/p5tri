@@ -70,13 +70,13 @@ class Ball{
       this.vel.mult(1-FRICTION);
     };
 
-    this.pos.add(this.vel);
-
     deflectX();
     deflectY();
 
     gravity();
     friction();
+
+    this.pos.add(this.vel);
 
   }
 
