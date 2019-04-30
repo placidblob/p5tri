@@ -1,5 +1,3 @@
-let img;
-
 function preload() {
   // Eemaj.preload();
 }

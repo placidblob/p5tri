@@ -31,7 +31,6 @@ class Ball{
   }
 
   step() {
-
     const deflectX = () => {
       if (this.pos.x + this.radius > this.maxX || this.pos.x < this.radius) {
         this.vel.x *= -1;
@@ -62,10 +61,22 @@ class Ball{
         this.pos.y += this.maxY;
     };
 
+    const gravity = () => {
+      let g = createVector(0, GRAVITY);
+      this.vel.add(g);
+    };
+
+    const friction = () => {
+      this.vel.mult(1-FRICTION);
+    };
+
     this.pos.add(this.vel);
 
     deflectX();
     deflectY();
+
+    gravity();
+    friction();
 
   }
 
