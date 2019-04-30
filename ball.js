@@ -1,5 +1,21 @@
 class Ball{
 
+  static setup() {
+    createCanvas(MAX_X,MAX_Y);
+
+    for( let i = 0; i < FLOCK_SIZE; i++ )
+      flock.push(new Ball(MAX_X,MAX_Y));
+  }
+
+  static draw() {
+    background(51);
+
+    for( let b of flock ) {
+      b.show();
+      b.step();
+    }
+  }
+
   constructor( maxX , maxY ) {
     this.pos = createVector(random(0,maxX), random(0,maxY));
     this.vel = p5.Vector.random2D();
