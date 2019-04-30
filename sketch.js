@@ -11,6 +11,5 @@ function setup() {
 
 function draw() {
   // Ball.draw();
-
   Eemaj.draw();
 }
