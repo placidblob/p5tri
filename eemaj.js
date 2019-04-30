@@ -1,3 +1,5 @@
+let img;
+
 class Eemaj {
 
   static preload() {
