@@ -70,7 +70,8 @@ class Ball{
       this.vel.mult(1-FRICTION);
     };
 
-    deflectX();
+    // deflectX();
+    pacmanX();
     deflectY();
 
     gravity();
