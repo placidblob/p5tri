@@ -32,7 +32,7 @@ class Ball{
 
   step() {
 
-    const reflectX = () => {
+    const deflectX = () => {
       if (this.pos.x + this.radius > this.maxX || this.pos.x < this.radius) {
         this.vel.x *= -1;
 
@@ -40,7 +40,7 @@ class Ball{
       }
     };
 
-    const reflectY = () => {
+    const deflectY = () => {
       if (this.pos.y + this.radius > this.maxY || this.pos.y < this.radius) {
         this.vel.y *= -1;
 
@@ -64,8 +64,8 @@ class Ball{
 
     this.pos.add(this.vel);
 
-    reflectX();
-    reflectY();
+    deflectX();
+    deflectY();
 
   }
 

@@ -1,7 +1,16 @@
+let img;
+
+function preload() {
+  Eemaj.preload();
+}
+
 function setup() {
-  Ball.setup();
+  // Ball.setup();
+  Eemaj.setup();
 }
 
 function draw() {
-  Ball.draw();
+  // Ball.draw();
+
+  Eemaj.draw();
 }
