@@ -7,4 +7,4 @@ const MAX_Y = 600;
 
 const BALL_RADIUS = 8;
 const GRAVITY = 2;
-const FRICTION = 0.01;
+const FRICTION = 0.005;
