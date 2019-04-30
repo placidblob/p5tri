@@ -72,11 +72,11 @@ class Ball{
 
     this.pos.add(this.vel);
 
-    gravity();
-    friction();
-
     deflectX();
     deflectY();
+
+    gravity();
+    friction();
 
   }
 
