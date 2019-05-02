@@ -7,13 +7,29 @@ class Ball{
       flock.push(new Ball(MAX_X,MAX_Y));
   }
 
+  // TODO: animated gif stuff - https://gist.github.com/antiboredom/129fd2311dec0046603e
+
   static draw() {
+    tick++;
+
     background(51);
 
     for( let b of flock ) {
       b.show();
       b.step();
     }
+
+    // if( tick < 1000 )
+    //   Ball.saveScreenshot( "balls-" + Ball.leadingZeroes(tick, 3) );
+  }
+
+  static leadingZeroes(num, len = 3) {
+    let rtrn = '0' + num;
+
+    for(let i = 1; i < len - 1; i++)
+      rtrn = '0' + rtrn;
+
+    return rtrn.slice(-len);
   }
 
   constructor( maxX , maxY ) {
@@ -28,6 +44,21 @@ class Ball{
     this.colour = color(random(128,255), random(128,255), random(128,255));
 
     this.radius = random(0.75*BALL_RADIUS, 1.25*BALL_RADIUS)
+  }
+
+  getNeighbours(balls) {
+    const rtrn = [];
+
+    for( let ball of balls )
+      if( this.distanceSq(ball) < LINE_OF_SIGHT_SQ )
+        rtrn.push(ball);
+
+     return rtrn;
+  }
+
+  distanceSq(ball) {
+    return (this.pos.x - ball.pos.x) * (this.pos.x - ball.pos.x) +
+           (this.pos.y - ball.pos.y) * (this.pos.y - ball.pos.y);
   }
 
   step() {
@@ -70,8 +101,8 @@ class Ball{
       this.vel.mult(1-FRICTION);
     };
 
-    // deflectX();
-    pacmanX();
+    deflectX();
+    // pacmanX();
     deflectY();
 
     gravity();
@@ -87,4 +118,7 @@ class Ball{
     point(this.pos.x, this.pos.y);
   }
 
+  static saveScreenshot(filename, extension = 'png') {
+    saveCanvas(filename, extension);
+  }
 }
