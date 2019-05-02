@@ -57,8 +57,10 @@ class Ball{
   }
 
   distanceSq(ball) {
-    return (this.pos.x - ball.pos.x) * (this.pos.x - ball.pos.x) +
-           (this.pos.y - ball.pos.y) * (this.pos.y - ball.pos.y);
+    const diffx = this.pos.x - ball.pos.x;
+    const diffy = this.pos.y - ball.pos.y;
+
+    return diffx * diffx + diffy * diffy;
   }
 
   step() {
