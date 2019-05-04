@@ -151,8 +151,8 @@ class Ball{
     // gravity();
     friction();
 
-    // attraction();
-    repulsion();
+    attraction();
+    // repulsion();
 
     limitVelocity();
 
