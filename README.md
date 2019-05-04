@@ -2,7 +2,9 @@
 
 See it [here](https://placidblob.github.io/p5tri/).
 
-Fiddling around with [p5.js](https://p5js.org/). Currently just a simulation of balls bouncing around in a box and ignoring each other.
+Fiddling around with [p5.js](https://p5js.org/).
+
+I don't know why they act that way, but it's nice.
 
 To run this locally:
 
