@@ -1,3 +1,6 @@
+let input, button;
+let on = false;
+
 class Ball{
 
   static zeBalls = [];
@@ -7,6 +10,67 @@ class Ball{
 
     for( let i = 0; i < FLOCK_SIZE; i++ )
       Ball.zeBalls.push(new Ball(MAX_X,MAX_Y));
+
+    // create canvas
+    // createCanvas(710, 400);
+
+
+
+    button = createButton('on/off');
+    button.position(20, 610);
+    button.mousePressed(Ball.clicked);
+
+    Ball.initSliders(button.x, button.y + button.height + VERT_PADDING);
+
+  }
+
+  static initSliders(x, y) {
+
+    let lastSlider; 
+    
+    framerateSlider = createSlider(1, 30, STEP_EVERY_N_FRAMES, 1);
+    framerateSlider.position(x, y);
+    framerateSlider.changed(Ball.readParams);
+    lastSlider = framerateSlider;
+    
+    cozinessSlider = createSlider(1, 30, COZY, 1);
+    cozinessSlider.position(lastSlider.x, lastSlider.y + lastSlider.height + VERT_PADDING);
+    cozinessSlider.changed(Ball.readParams);
+    lastSlider = cozinessSlider;
+    
+    gravitySlider = createSlider(1, 30, GRAVITY, 1);
+    gravitySlider.position(lastSlider.x, lastSlider.y + lastSlider.height + VERT_PADDING);
+    gravitySlider.changed(Ball.readParams);
+    lastSlider = gravitySlider;
+
+    flockSlider = createSlider(1, 1500, FLOCK_SIZE, 10);
+    flockSlider.position(lastSlider.x, lastSlider.y + lastSlider.height + VERT_PADDING);
+    flockSlider.changed(Ball.readParams);
+  }
+
+
+  static clicked() {
+    on = !on;
+  }
+
+  static readParams() {
+
+    STEP_EVERY_N_FRAMES = Ball.sliderVal(framerateSlider);
+
+    COZY = Ball.sliderVal(cozinessSlider);
+    COZY_DISTANCE = COZY * BALL_RADIUS;
+    COZY_DISTANCE_SQ = COZY_DISTANCE * COZY_DISTANCE;
+    LINE_OF_SIGHT = COZY_DISTANCE * 2;
+    LINE_OF_SIGHT_SQ = LINE_OF_SIGHT * LINE_OF_SIGHT;
+
+    GRAVITY = Ball.sliderVal(gravitySlider);
+    MAX_VELOCITY = 3 * GRAVITY;
+
+    FLOCK_SIZE = Ball.sliderVal(flockSlider);
+  }
+
+  static sliderVal(slider) {
+    return Number(slider.evt.value);
   }
 
   // TODO: animated gif stuff - https://gist.github.com/antiboredom/129fd2311dec0046603e
@@ -18,7 +82,9 @@ class Ball{
 
     for( let b of Ball.zeBalls ) {
       b.show();
-      b.step(tick);
+
+      if( on && tick % STEP_EVERY_N_FRAMES == 0 )
+        b.step(tick);
     }
 
     // if( tick < 1000 )
@@ -48,7 +114,14 @@ class Ball{
 
     this.colour = color(random(128,255), random(128,255), random(128,255));
 
-    this.radius = random(0.75*BALL_RADIUS, 1.25*BALL_RADIUS)
+    this.radius = random(0.75*BALL_RADIUS, 1.25*BALL_RADIUS);
+
+    this.attract = random(0, 1) < 0.5;
+
+    if( this.attract )
+      this.colour = color(100,255,100);
+    else
+      this.colour = color(255,100,100);
   }
 
   getAttractiveForce(balls) {
@@ -151,8 +224,10 @@ class Ball{
     // gravity();
     friction();
 
-    attraction();
-    // repulsion();
+    if( this.attract )
+      attraction();
+    else
+      repulsion();
 
     limitVelocity();
 
