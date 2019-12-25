@@ -48,7 +48,8 @@ class Ball{
 
     this.colour = color(random(128,255), random(128,255), random(128,255));
 
-    this.radius = random(0.75*BALL_RADIUS, 1.25*BALL_RADIUS)
+    this.radius = BALL_RADIUS;
+    // this.radius = random(0.75*BALL_RADIUS, 1.25*BALL_RADIUS);
   }
 
   getAttractiveForce(balls) {
@@ -60,6 +61,27 @@ class Ball{
       const distSq = this.distanceSq(b);
 
       force.setMag((distSq - COZY_DISTANCE_SQ) / COZY_DISTANCE_SQ );
+
+      rtrn.add(force);
+    });
+
+    rtrn.setMag(ATTRACTIVE_FORCE);
+
+    return rtrn;
+  }
+
+  getRepulsiveForce(balls) {
+    const rtrn = createVector();
+
+    balls.forEach(b => {
+      const force = createVector(b.pos.x - this.pos.x, b.pos.y - this.pos.y);
+
+      const distSq = this.distanceSq(b);
+
+      if(distSq >= COZY_DISTANCE_SQ)
+        return;
+
+      force.setMag((COZY_DISTANCE_SQ - distSq) / COZY_DISTANCE_SQ);
 
       rtrn.add(force);
     });
@@ -86,7 +108,82 @@ class Ball{
     return diffx * diffx + diffy * diffy;
   }
 
-  step(tick) {
+  getColour = (baseColour = true) => {
+    return this.colour;
+  };
+
+  configurations = {
+    efervescent: {
+      title: "Efervescent",
+      description: "ends up looking like gas molecules escaping a liquid",
+      behaviour: {
+        // all walls are solid
+        deflectX: true,
+        deflectY: true,
+        pacmanX: false,
+        pacmanY: false,
+
+        // gravity and friction
+        gravity: true,
+        fiction: true,
+
+        // no attraction, just repel neighbours
+        attraction: false,
+        repulsion: true,
+
+        limitVelocity: true
+      }
+    },
+    stream: {
+      title: "Stream",
+      description: "they self-organise to act as a stream",
+      velocity: 4,
+      behaviour: {
+        // ceil and floor are pacman, walls are solid
+        deflectX: true,
+        deflectY: false,
+        pacmanX: false,
+        pacmanY: true,
+
+        // gravity and friction
+        gravity: true,
+        fiction: true,
+
+        // attraction and repulsion
+        attraction: true,
+        repulsion: true,
+
+        limitVelocity: true
+      }
+    },
+    experimental: {
+      title: "placeholder for experimentation",
+      description: "",
+      behaviour: {
+        // ceil and floor are pacman, walls are solid
+        deflectX: false,
+        deflectY: false,
+        pacmanX: true,
+        pacmanY: true,
+
+        // gravity and friction
+        gravity: false,
+        fiction: true,
+
+        // attraction and repulsion
+        attraction: true,
+        repulsion: true,
+
+        limitVelocity: true
+      }
+    },
+  };
+
+  step() {
+    const config = this.configurations.experimental.behaviour;
+
+    const neighbours = this.getNeighbours();
+
     const deflectX = () => {
       if (this.pos.x + this.radius > this.maxX || this.pos.x < this.radius) {
         this.vel.x *= -1;
@@ -127,13 +224,13 @@ class Ball{
     };
 
     const attraction = () => {
-      const attr = this.getAttractiveForce(this.getNeighbours());
+      const attr = this.getAttractiveForce(neighbours);
 
       this.vel.add(attr);
     };
 
     const repulsion = () => {
-      const attr = this.getAttractiveForce(this.getNeighbours());
+      const attr = this.getRepulsiveForce(neighbours);
 
       this.vel.sub(attr);
     };
@@ -143,25 +240,25 @@ class Ball{
         this.vel.setMag(MAX_VELOCITY);
     };
 
-    // deflectY();
-    // deflectX();
-    pacmanX();
-    pacmanY();
+    config.deflectX && deflectX();
+    config.deflectY && deflectY();
+    config.pacmanX && pacmanX();
+    config.pacmanY && pacmanY();
 
-    // gravity();
-    friction();
+    config.gravity && gravity();
+    config.friction && friction();
 
-    attraction();
-    // repulsion();
+    config.attraction && attraction();
+    config.repulsion && repulsion();
 
-    limitVelocity();
+    config.limitVelocity && limitVelocity();
 
     this.pos.add(this.vel);
   }
 
   show() {
     strokeWeight(this.radius * 2);
-    stroke(this.colour);
+    stroke(this.getColour());
     point(this.pos.x, this.pos.y);
   }
 

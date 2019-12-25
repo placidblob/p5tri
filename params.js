@@ -1,15 +1,15 @@
 const zeBalls = [];
 
-const FLOCK_SIZE = 40;
+const FLOCK_SIZE = 256;
 
-const MAX_X = 800;
-const MAX_Y = 600;
+const MAX_X = 900;
+const MAX_Y = 900;
 
-const BALL_RADIUS = 8;
+const BALL_RADIUS = 12;
 const GRAVITY = 2;
 const FRICTION = 0.004;
 
-const MAX_VELOCITY = 3 * GRAVITY;
+const MAX_VELOCITY = 6 * GRAVITY;
 
 const COZY = 8;
 const COZY_DISTANCE = COZY * BALL_RADIUS;
